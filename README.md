@@ -354,7 +354,7 @@ There we have it, our graph based recommendation system. We can see that network
 - Package above code into functions to simple pass in a book ASIN and get recommendations. 
 - Use movie lens database with this approach to recommend movies. 
 
-## Additional Resouces. 
+## Additional Resouces
 
 This dataset used in this experiment was set up and introduced in the following paper focused at digital marketing. Although it is not mandatory, we would encourage you to read this paper to see how such products can become game changers for a number of data driven businesses.
 
