@@ -75,7 +75,7 @@ ASIN: 1559362022
     2004-2-17  cutomer:  AUUVMSTQ1TXDI  rating: 1  votes:   2  helpful:   0
     2004-2-24  cutomer: A2C5K0QTLL9UAT  rating: 5  votes:   2  helpful:   2
     2004-10-13 cutomer:  A5XYF0Z3UH4HB  rating: 5  votes:   1  helpful:   1
-```
+    ```
 
 
 
@@ -361,6 +361,10 @@ print ("Ego Network for", books_meta_dict[asin]['Title'],
 nx.draw(ego, with_labels=True)
 ```
 
+
+![png](index_files/index_16_0.png)
+
+
 ## Level up - Optional 
 
 - Get the books titles from `books_meta_dict` dictionary re-draw the graph showing book titles instead of ASIN numbers. 
@@ -387,7 +391,7 @@ dcl = nx.degree(books_copurchase) # Check for degree centrality
 dc = dcl[temp_asin] # Degree centrality of chosen book 
 print ("Degree Centrality:", dc)
 temp_ego = nx.ego_graph(books_copurchase, temp_asin, radius=1)
-nx.draw(temp_ego)
+nx.draw(temp_ego, alpha=0.2)
 ```
 
     Brown Bear, Brown Bear, What Do You See?
@@ -447,7 +451,7 @@ print("\nASINs in the trimmed network: \n", list(trimmed_ego))
     Edges = 22
     
     ASINs in the trimmed network: 
-     ['0553574132', '0553477455', '0345400771', '0345320239', '0553574167', '0553574159', '0553477463', '0553574175', '0345394429', '0345379802']
+     ['0553477455', '0553574132', '0345320239', '0345379802', '0553574175', '0553574167', '0553574159', '0553477463', '0345400771', '0345394429']
 
 
 So now we have 10 nodes and 22 edges. That means we are getting 10 recommendations for the given book. You can play a bit more with the threshold value above to include and drop books from this list. We shall take these ASINs and make recommendations based on these for now. 
@@ -484,20 +488,25 @@ for nb_asin in lst_neighbors[1:]:
     Customers who bought this book, also bought:
     -------------------------------------------
     
-    Asin:  0553477455
-    Book Title:  The Hutt Gambit (Star Wars: The Han Solo Trilogy, Vol. 2)
+    Asin:  0553574132
+    Book Title:  Star Wars: Shadows of the Empire
     Average Rating: 4.5
-    Number of Reviews:  68
-    
-    Asin:  0345400771
-    Book Title:  Star Wars, Episode IV - A New Hope
-    Average Rating: 4.5
-    Number of Reviews:  25
+    Number of Reviews:  325
     
     Asin:  0345320239
     Book Title:  Star Wars: Splinter of the Mind's Eye
     Average Rating: 3.5
     Number of Reviews:  66
+    
+    Asin:  0345379802
+    Book Title:  Star Wars: The Han Solo Adventures
+    Average Rating: 4.0
+    Number of Reviews:  31
+    
+    Asin:  0553574175
+    Book Title:  Rebel Dawn : Star Wars : The Han Solo Trilogy - Volume Three (Star Wars: Han Solo Trilogy (Paperback))
+    Average Rating: 4.5
+    Number of Reviews:  98
     
     Asin:  0553574167
     Book Title:  The Hutt Gambit (Star Wars: The Han Solo Trilogy, Vol. 2)
@@ -514,18 +523,13 @@ for nb_asin in lst_neighbors[1:]:
     Average Rating: 4.5
     Number of Reviews:  97
     
-    Asin:  0553574175
-    Book Title:  Rebel Dawn : Star Wars : The Han Solo Trilogy - Volume Three (Star Wars: Han Solo Trilogy (Paperback))
+    Asin:  0345400771
+    Book Title:  Star Wars, Episode IV - A New Hope
     Average Rating: 4.5
-    Number of Reviews:  98
+    Number of Reviews:  25
     
     Asin:  0345394429
     Book Title:  Star Wars: The Han Solo Adventures (Classic Star Wars)
-    Average Rating: 4.0
-    Number of Reviews:  31
-    
-    Asin:  0345379802
-    Book Title:  Star Wars: The Han Solo Adventures
     Average Rating: 4.0
     Number of Reviews:  31
 
