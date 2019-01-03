@@ -121,19 +121,39 @@ import matplotlib.pyplot
 
 
 ```python
-# read the data from the amazon-books.txt and populate nested dicitonary:
+# read the data from the amazon-books.txt;
+# populate amazonProducts nested dicitonary;
 # key = ASIN; value = MetaData associated with ASIN
+file = open('amazon-books.txt', 'r', encoding='utf-8', errors='ignore')
+books_dict = {}
+file.readline()
 
-# Code here 
+# Parse data from each ASIN entry
+for line in file:
+    cell = line.split('\t')
+    MetaData = {}
+    MetaData['Id'] = cell[0].strip() 
+    ASIN = cell[1].strip()
+    MetaData['Title'] = cell[2].strip()
+    MetaData['Categories'] = cell[3].strip()
+    MetaData['Group'] = cell[4].strip()
+    MetaData['SalesRank'] = int(cell[5].strip())
+    MetaData['TotalReviews'] = int(cell[6].strip())
+    MetaData['AvgRating'] = float(cell[7].strip())
+    MetaData['DegreeCentrality'] = int(cell[8].strip())
+    MetaData['ClusteringCoeff'] = float(cell[9].strip())
+    
+    # Write metadata as value with key ASIN
+    books_dict[ASIN] = MetaData
+
+# Close the file reader
+file.close()
+len()
 ```
 
 
 ```python
-# Check the total number of records - uncomment to run
-
-# len(books_dict) 
-
-# 393561
+len(books_dict)
 ```
 
 
@@ -152,7 +172,13 @@ import matplotlib.pyplot
 
 
 ```python
-# Code Here
+# read the data from amazon-books-copurchase.adjlist;
+# assign it to copurchaseGraph weighted Graph;
+# node = ASIN, edge= copurchase, edge weight = category similarity
+file=open("amazon-books-copurchase.edgelist", 'rb')
+books_copurchase_graph=nx.read_weighted_edgelist(file)
+file.close()
+print(nx.info(books_copurchase_graph))
 ```
 
     Name: 
@@ -181,9 +207,13 @@ asin = '0486405524'
 
 # Print out the features associates with the book
 
- # Code here 
-    
-    
+print ("Title = ", books_dict[asin]['Title'])
+print ("ASIN = ", asin)
+print ("SalesRank = ", books_dict[asin]['SalesRank'])
+print ("TotalReviews = ",books_dict[asin]['TotalReviews'])
+print ("AvgRating = ", books_dict[asin]['AvgRating'])
+print ("DegreeCentrality = ", books_dict[asin]['DegreeCentrality'])
+print ("ClusteringCoeff = ", books_dict[asin]['ClusteringCoeff'])
 ```
 
     My First Purchase
@@ -236,13 +266,10 @@ We should therefore come up with a better strategy as we can't recommend 216 boo
 # Get ego network of given asin at depth 1 using networkx.ego_graph package + assign to variable ego_graph
 # print number of nodes and edges in ego_graph
 
-ego_graph = None 
-
-# Uncomment to run below
-
-# print ("Ego Network:", 
-#       "Nodes =", ego.number_of_nodes(), 
-#       "Edges =", ego.number_of_edges())
+ego_graph = nx.ego_graph(books_copurchase_graph, asin, radius=1)
+print ("Ego Network:", 
+       "Nodes =", ego.number_of_nodes(), 
+       "Edges =", ego.number_of_edges())
 
 ```
 
@@ -271,12 +298,22 @@ We shall now use island method on ego network with a threshold of 0.5 to trim do
 ```python
 # Create empty graph instance `trimmed_ego_net` using the `nx.Graph()`to represent the trimmed network
 
-threshold = None
-trimmed_ego_net = None
+threshold = 0.5
+trimmed_ego_net = nx.Graph()
 
 # Iterate
+for n1, n2, e in ego.edges(data=True):
+    if e['weight'] >= threshold:
+        trimmed_ego_net.add_edge(n1,n2,weight = list(e.values()))
+        
+        
+print ("Trimmed Ego Network:", 
+       "\n____________________\n",
+       "\nThreshold=", threshold,
+       "\nNodes =", egotrim.number_of_nodes(), 
+        "\nEdges =", egotrim.number_of_edges())
 
-# Code here 
+print("\nASINs in the trimmed network: \n", list(egotrim))
 ```
 
     Trimmed Ego Network: 
@@ -299,8 +336,9 @@ This is great. We can now inspect the neighbor ASINs in our trimmed network as b
 
 ```python
 # Print out the neighbors of the asin in the trimmed network
-
-# code here 
+neighbors = egotrim.neighbors(asin)
+lst_neighbours = list(neighbors)
+lst_neighbours
 ```
 
 
@@ -322,7 +360,17 @@ Great, we are almost there. We just need to use above ASINs to extract actual bo
 
 
 ```python
-# code here 
+print ("Purchased Book")
+print("Title: ",books_dict[asin]['Title'])
+
+
+print ("\nCustomers who bought this book, also bought")
+print ("\n-------------------------------------------")
+for nb_asin in lst[1:]:
+    print("\nAsin: ", nb_asin)
+    print("Book Title: ", books_dict[nb_asin]["Title"])
+    print("Average Rating:", books_dict[nb_asin]["AvgRating"])
+    print("Number of Reviews: ", books_dict[nb_asin]["TotalReviews"])
 ```
 
     Purchased Book
